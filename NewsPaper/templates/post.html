@@ -1,0 +1,54 @@
+<!--  наследуемся от шаблона default.html, который мы создавали для flatpages -->
+{% extends 'flatpages/default.html' %}
+{% load custom_filters %}
+<!-- Название у нас будет **** -->
+{% block title %}
+post
+
+{% endblock title %}
+
+<!-- В контенте на странице мы выводим сам товар, идентификатор которого был передан в url -->
+{% block content %}
+<h3>новость номер {{ post.pk }}</h3><br>
+   <table>
+           <tr>
+               <td>Заголовок</td>
+               <td>Опубликовано</td>
+               <td>Содержание</td>
+
+
+
+
+           </tr>
+
+
+           <tr>
+               <td>{{ post.header }}</td>
+               <td>{{ post.creation_date|censored|date:'d M Y' }}</td>
+               <td>{{ post.body|censored }}</td>
+<!--                <td>-->
+<!--                    {% for catname in post.cat.all  %}-->
+<!--                    {{catname}}-->
+<!--                     {% endfor %}-->
+<!--                    </td>-->
+
+
+           </tr>
+
+
+       </table>
+<br>
+<h3>категории </h3><br>
+<form action="" >
+{% for c in post.cat.values %}
+ <a href={% url "category_nameurl" c.id %}> {{c.name}}</a> <!--# вместо постлист создать reverse ссылку на новый view-->
+ {% endfor %}
+
+
+<!--<button type="submit">подписаться на категории поста-->
+<!--                    {% for catname in post.cat.all  %}-->
+<!--                    {{catname}}-->
+<!--                    {% endfor %}-->
+<!--            </button>-->
+</form>
+{% endblock content %}

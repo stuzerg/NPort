@@ -1,0 +1,25 @@
+{% extends 'flatpages/default.html' %}
+
+{% block content %}
+<h1>ПОСТЫ</h1>
+{% if post.type_post == 'a' %}
+    <h1> пост->статья </h1>
+    {% endif %}
+{% if post.type_post == 'n' %}
+    <h1> пост->новость </h1>
+    {% endif %}
+
+
+
+<hr>
+<form action="" method="post">
+    {% csrf_token %}
+
+    {% if post.wrong_state %}
+    <h1> не тот тип поста  ---- > новость<->статья </h1>
+    {% endif %}
+
+    {{ form.as_p }}
+    <input type="submit" value="Save" />
+</form>
+{% endblock content %}

@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h2>Здравствуйте {{ sub.user_s.email }}! Спасибо за оформленную подписку! отправлено из form_valid </h2>
+
+    <h1>Новая статья в твоём любимом разделе "{{ k.category.name }}" </h1>
+
+    <h3>{{post.header}}</h3>
+
+    <p>{{post.body| truncatechars:50}}</p>
+</body>
+</html>

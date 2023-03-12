@@ -1,0 +1,16 @@
+{% extends 'flatpages/default.html' %}
+
+{% block content %}
+<h1>Удаление поста</h1>
+<hr>
+<form action="" method="post">
+    {% csrf_token %}
+
+<!--     {% if object.type_post == 'n' %}-->
+     <p>{{ object.request.path }}</p>
+
+<!--   {% endif %}-->
+    <p>Удаляем "{{ object.body}}, за авторством {{ object.author.user.username}} "?</p>
+    <input type="submit" value="Delete" />
+</form>
+{% endblock content %}

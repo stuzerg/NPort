@@ -1,0 +1,14 @@
+{% extends 'flatpages/default.html' %}
+
+{% block content %}
+<h1>category for subscribing</h1>
+
+  {{request.user.username}}, подписаться на категорию {{  categ_context.name }} ?
+ <form action="" method="post" >
+      {% csrf_token %}
+
+
+    <button type="submit">да, подписаться</button>
+
+     </form>
+{% endblock content %}

@@ -1,0 +1,84 @@
+from news_paper.models import *
+
+User.objects.create_user('panda_man')
+
+User.objects.create_user('slayer')
+
+User.objects.create_user('vangogh')
+
+User.objects.create_user('ducky_the_DUCK')
+
+User.objects.create_user('schnitzel')
+
+
+Category.objects.create(name = 'culture')
+ 
+Category.objects.create(name = 'sport')   
+ 
+Category.objects.create(name = 'science')
+ 
+Category.objects.create(name = 'economics')
+
+
+Author.objects.create(user = User.objects.all()[0])  
+
+Author.objects.create(user = User.objects.all()[1]) 
+
+Post.objects.create(author = Author.objects.get(pk=1), body = 'Земля натолкнулась на небесную ось. Сегодня замечательное событие! затмение солнца Многие выскочили на улицу и смотрели. так и я поступил. Вооружившись каким то пластиком удалось сделать снимок', header = 'Axis in the Sky')
+
+
+Post.objects.create(author = Author.objects.get(pk=1), body = 'Свет с Венеры отразился от верхних слоёв атмосферы и вызвал взрыв болотного газа. Они копошатся и не понимают, что их жизнь лишена всякого смысла, что она коротка',  header = 'Venus lights')
+
+
+Post.objects.create(type_post = 'n', author = Author.objects.get(pk=2), body = 'Необходимость принятия такого закона в тексте объясняется развитием интеллектуального и духовно-нравственного потенциала общества и уменьшением критического недостатка на внутреннем рынке продовольственных и иных товаров', header = 'Their Law') 
+
+Post.objects.create(type_post = 'n' , author = Author.objects.get(pk=2), body = 'По состоянию на 6 января в России не обнаружен субвариант омикрон-штамма коронавируса кракен, сообщили в Роспотребнадзоре. В службе отметили, что новый подвариант омикрона более заразный', header = 'Free KRAKEN!') 
+
+
+PostCategory.objects.create(post = Post.objects.get(pk=1), category = Category.objects.get(pk = 4))
+ 
+PostCategory.objects.create(post = Post.objects.get(pk=1), category = Category.objects.get(pk = 3))  
+ 
+PostCategory.objects.create(post = Post.objects.get(pk=2), category = Category.objects.get(pk = 3)) 
+ 
+PostCategory.objects.create(post = Post.objects.get(pk=3), category = Category.objects.get(pk = 1))  
+ 
+PostCategory.objects.create(post = Post.objects.get(pk=3), category = Category.objects.get(pk = 2)) 
+ 
+PostCategory.objects.create(post = Post.objects.get(pk=4), category = Category.objects.get(pk = 4)) 
+
+for i in range(1,5): Comment.objects.create(post = Post.objects.get(pk = i), user = User.objects.all()[5-i], body = 'comment no'+str(i))
+
+Comment.objects.create(post = Post.objects.get(pk = 1), user = User.objects.all()[1], body = 'another one comment')     
+
+Comment.objects.get(pk = 1).like()
+Comment.objects.get(pk = 1).like()
+Comment.objects.get(pk = 1).like()
+Comment.objects.get(pk = 1).like()
+
+Comment.objects.get(pk = 2).dislike()
+Comment.objects.get(pk = 2).dislike()
+
+Comment.objects.get(pk = 4).like()
+
+Post.objects.get(pk = 1).like() 
+Post.objects.get(pk = 1).like() 
+
+Post.objects.get(pk = 3).like() 
+
+Author.update_rating(Author.objects.get(pk = 1)) 
+Author.update_rating(Author.objects.get(pk = 2))   
+
+*Author.objects.all().order_by('-rating').values('user__username', 'rating')[0].values(),
+
+best_post_array  =  list(Post.objects.all().order_by('-rating').values('creation_date', 'author__user__username',  'rating', 'header', 'pk')[0].values())
+
+best_post_array[0].strftime('%d/%m/%Y %H:%M:%S' ) + str(best_post_array[1:-1]) + Post.objects.get(pk = best_post_array[-1] ).preview()
+
+*Comment.objects.filter(post_id = best_post_array[-1] ).values('create_time', 'user__username', 'rating', 'body'),
+
+
+
+
+
+
