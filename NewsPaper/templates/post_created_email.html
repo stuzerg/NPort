@@ -5,8 +5,11 @@
     <title>Title</title>
 </head>
 <body>
-<h1>новая  </h1>
-<a href="{{ link }}"> статья в разделе </a>
-<p>{{ text }} </p>
+<p>
+    new <a href="{{ link }}"> post</a> in categories {% for k in kate%}
+<ul>{{k}}</ul>
+{% endfor %}
+    </p>
+<h1>{{ text }} </h1>
 </body>
 </html>

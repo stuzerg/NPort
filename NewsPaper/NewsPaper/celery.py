@@ -13,8 +13,8 @@ app.config_from_object('django.conf:settings', namespace='CELERY')
 app.conf.beat_schedule = {
     'monday_spamming': {
         'task': 'news_paper.tasks.spamming',
-        'schedule': crontab(hour=8, minute=0, day_of_week='monday'),
-        'args': ('Ahhhhhhh',),
+        'schedule':  crontab(hour=8, minute=0, day_of_week='monday'),
+        'args': ('Ahhhhhhh - some argument for example',),
     },
 }
 

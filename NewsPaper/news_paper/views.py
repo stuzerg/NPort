@@ -19,6 +19,8 @@ from .forms import PostForm #, CategoryForm
 from .models import Post, Category, PostCategory, Author, SubscribedCatUsers
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 
+from .tasks import send_notify
+
 
 class PostNewsList(ListView):
     # Указываем модель, объекты которой мы будем выводить
@@ -127,31 +129,32 @@ class PostCreate(PermissionRequiredMixin, CreateView):
         if ('articles' in self.request.path):
             pst.type_post = 'a'
         pst = form.save(commit=True)
-        kate = PostCategory.objects.filter(post = pst )
-        for k in kate:
-            print ("cat =", k.category.name)
-            subs_list = SubscribedCatUsers.objects.filter(categ = k.category)
-            # email_lst = []
-            for sub in subs_list:
-                print(sub.user_s.email)
-                html_content = render_to_string(
-                    'subscription_registered.html',
-                    {
-                        'post': pst,
-                        'k' : k,
-                        'sub' :sub
-                    }
-                )
-                # print(html_content)
-                if sub.user_s.email != '':
-                    msg = EmailMultiAlternatives(
-                        subject=pst.header,
-                        body="",
-                        from_email='stutzerg@yandex.ru',
-                        to=[sub.user_s.email],
-                    )
-                    msg.attach_alternative(html_content, "text/html")
-                    msg.send()
+        idd = pst.pk
+        send_notify.apply_async([idd], countdown=2)
+        # for k in kate:
+        #     print ("cat =", k.category.name)
+        #     subs_list = SubscribedCatUsers.objects.filter(categ = k.category)
+        #
+        #     for sub in subs_list:
+        #         print(sub.user_s.email)
+        #         html_content = render_to_string(
+        #             'subscription_registered.html',
+        #             {
+        #                 'post': pst,
+        #                 'k' : k,
+        #                 'sub' :sub
+        #             }
+        #         )
+        #
+        #         if sub.user_s.email != '':
+        #             msg = EmailMultiAlternatives(
+        #                 subject=pst.header,
+        #                 body="",
+        #                 from_email='stutzerg@yandex.ru',
+        #                 to=[sub.user_s.email],
+        #             )
+        #             msg.attach_alternative(html_content, "text/html")
+        #             msg.send()
 
 
         return super().form_valid(form)
