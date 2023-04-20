@@ -21,8 +21,11 @@ posts
 <h1>статья </h1>
 {% endif %}
 
-
-
+{% if curr_time  %}
+<h1>time from 10 sec cache
+{{curr_time}}
+{% endif %}
+</h1>
 <table>
            <tr>
                <td>Заголовок</td>

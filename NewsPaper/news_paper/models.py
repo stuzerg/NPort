@@ -59,6 +59,10 @@ class Post(models.Model):
         # print(self.body[0:124]+'...')
         return self.body[0:124]+'...'
 
+    @property
+    def addit_prop(self):
+        return "доп свойство"
+
     def like(self):
         self.rating += 1
         self.save()

@@ -2,6 +2,7 @@
 # что в этом представлении мы будем выводить список объектов из БД
 import http.client
 from datetime import datetime
+from time import time
 
 import requests
 from django.core.mail import EmailMultiAlternatives
@@ -37,8 +38,12 @@ class PostNewsList(ListView):
     paginate_by = 3
 
 class PostArticlesList(ListView):
-    # Указываем модель, объекты которой мы будем выводить
-    #model = Post
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        context['curr_time'] = time()
+        print(context)
+        return context
 
     queryset = Post.objects.filter(type_post = 'a').order_by('-creation_date')
 

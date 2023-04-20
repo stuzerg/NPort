@@ -9,7 +9,7 @@ https://docs.djangoproject.com/en/4.1/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.1/ref/settings/
 """
-import os
+import os, logging
 from dotenv import load_dotenv, find_dotenv
 load_dotenv(find_dotenv())
 from pathlib import Path
@@ -196,3 +196,129 @@ CELERY_RESULT_BACKEND = 'redis://default:R8tugt67rE9m2ooLbBtdVMHfcfYyvIXl@redis-
 CELERY_ACCEPT_CONTENT = ['application/json']
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
+
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.filebased.FileBasedCache',
+        'LOCATION': os.path.join(BASE_DIR, 'cache_files'), # Указываем, куда будем сохранять кэшируемые файлы! Не забываем создать папку cache_files внутри папки с manage.py!
+    }
+}
+
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    # 'style' : '{',
+    'formatters': {
+        'simple': {
+            'format': '%(asctime)s %(levelname)s %(message)s'
+        },
+        'simple_withpathname': {
+            'format': '%(asctime)s %(levelname)s  %(message)s путь %(pathname)s'
+        },
+        'simple_withpathname_error': {
+            'format': '%(asctime)s %(levelname)s %(exc_info)s %(message)s путь  %(pathname)s'
+        },
+
+        'log_format1': {
+            'format': '%(asctime)s %(levelname)s %(module)s %(message)s'
+        },
+
+    },
+    'filters': {
+        'require_debug_true': {
+            '()': 'django.utils.log.RequireDebugTrue'},
+        'require_debug_false': {
+            '()': 'django.utils.log.RequireDebugFalse'},
+                },
+    'handlers': {
+        'console1': {
+            'level': 'DEBUG',
+            'filters': ['require_debug_false'],
+            'class': 'rich.logging.RichHandler', #pip install rich
+            'formatter': 'simple'
+        },
+        'console2': {
+            'level': 'WARNING',
+            'filters': ['require_debug_false'],
+            'class': 'rich.logging.RichHandler', #pip install rich
+            'formatter': 'simple_withpathname'
+        },
+
+        'console3': {
+            'level': 'ERROR',
+            'filters': ['require_debug_false'],
+            'class': 'rich.logging.RichHandler', #pip install rich
+            'formatter': 'simple_withpathname_error'
+        },
+
+
+        'log_to_general': {
+            'class': 'logging.FileHandler',
+            'level': 'INFO',
+            'filters': ['require_debug_false'],
+            'filename': 'logs/General.log' ,
+            'formatter': 'log_format1'
+        },
+
+        'log_to_errors': {
+            'class': 'logging.FileHandler',
+            'level': 'ERROR',
+            'filters': ['require_debug_true'],
+            'filename': 'logs/Errors.log' ,
+            'formatter': 'simple_withpathname_error'
+        },
+
+        'log_to_security': {
+            'class': 'logging.FileHandler',
+            'level': 'DEBUG',
+
+            'filters': ['require_debug_true'],
+            'filename': 'logs/Security.log' ,
+            'formatter': 'log_format1'
+        },
+
+
+
+        'mail_admins': {
+            'level': 'WARNING',
+            'filters': ['require_debug_false'],
+            'formatter': 'simple_withpathname',
+            'class': 'django.utils.log.AdminEmailHandler'
+        }
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['console1', 'console2', 'console3',  'log_to_general', ],
+            'level': 'DEBUG',
+            'propagate': True
+        },
+
+        'django.request': {
+            'handlers': ['log_to_errors', 'mail_admins'],
+            'level': 'DEBUG',
+            'propagate': True
+        },
+        'django.server': {
+            'handlers': ['log_to_errors', 'mail_admins'],
+            'level': 'DEBUG',
+            'propagate': True
+        },
+        'django.template': {
+            'handlers': ['log_to_errors',],
+            'level': 'DEBUG',
+            'propagate': True,
+        },
+        'django.db.backends': {
+            'handlers': ['log_to_errors',],
+            'level': 'DEBUG',
+            'propagate': True,
+        },
+        'django.security': {
+            'handlers': ['log_to_security' ],
+            'level': 'DEBUG',
+            'propagate': True,
+        }
+
+    }
+}
